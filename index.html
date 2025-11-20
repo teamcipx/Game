@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fast Cash Run - Play & Earn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              neon: {
+                green: '#00ff41',
+                pink: '#ff00ff',
+                blue: '#00f3ff',
+                yellow: '#fff01f',
+              },
+              dark: {
+                900: '#050505',
+                800: '#0a0a0a',
+                700: '#121212',
+              }
+            },
+            animation: {
+              'pulse-fast': 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            fontFamily: {
+              display: ['Arial Black', 'sans-serif'],
+              mono: ['Courier New', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #050505;
+        color: white;
+        overflow: hidden;
+        touch-action: none;
+      }
+      
+      /* Cyberpunk Grid Background */
+      .grid-bg {
+        background-size: 40px 40px;
+        background-image:
+          linear-gradient(to right, rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+        animation: scrollGrid 2s linear infinite;
+      }
+
+      @keyframes scrollGrid {
+        0% { background-position: 0 0; }
+        100% { background-position: 0 40px; }
+      }
+      
+      #ad-banner-bottom {
+         position: fixed;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         display: flex;
+         justify-content: center;
+         z-index: 50;
+         background: rgba(0,0,0,0.5);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.6.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Native Ad Container (Less intrusive) -->
+    <div style="display:none;">
+      <div id="container-82759fb4d64e44da2297eab8bf6aa1d8"></div>
+    </div>
+
+    <!-- Popunder / Script Ad -->
+    <script type='text/javascript' src='//pl28098652.effectivegatecpm.com/d0/e8/82/d0e8822b0f745936742440ce4b8cc6fd.js'></script>
+
+    <!-- Native Ad Script -->
+    <script async="async" data-cfasync="false" src="//pl28098607.effectivegatecpm.com/82759fb4d64e44da2297eab8bf6aa1d8/invoke.js"></script>
+
+    <!-- Bottom Banner Ad (HighPerformanceFormat) -->
+    <div id="ad-banner-bottom">
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'c780314a920a2b84ec9ff1c876ddc5e7',
+          'format' : 'iframe',
+          'height' : 60,
+          'width' : 468,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/c780314a920a2b84ec9ff1c876ddc5e7/invoke.js"></script>
+    </div>
+
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
