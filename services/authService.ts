@@ -44,7 +44,7 @@ export const registerUser = async (email: string, password: string, name: string
             totalCoins: 0,
             highScore: 0,
             referralCode: myReferralCode,
-            referredBy: referralCode || undefined
+            referredBy: referralCode || null
           };
 
           // Handle Referral Bonus
