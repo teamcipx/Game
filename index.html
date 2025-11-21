@@ -1,4 +1,4 @@
-
+--- START OF FILE Game-main/index.html ---
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -56,15 +56,19 @@
         100% { background-position: 0 40px; }
       }
       
-      #ad-banner-bottom {
+      /* Banner Ad Container - Always at bottom */
+      #adsterra-banner {
          position: fixed;
          bottom: 0;
          left: 0;
          right: 0;
+         height: 60px; /* Height of your banner (e.g. 320x50 or 468x60) */
          display: flex;
          justify-content: center;
+         align-items: center;
          z-index: 50;
-         background: rgba(0,0,0,0.5);
+         background: rgba(0,0,0,0.8);
+         border-top: 1px solid #333;
       }
     </style>
   <script type="importmap">
@@ -87,29 +91,14 @@
   <body>
     <div id="root"></div>
 
-    <!-- Native Ad Container (Less intrusive) -->
-    <div style="display:none;">
-      <div id="container-82759fb4d64e44da2297eab8bf6aa1d8"></div>
-    </div>
-
-    <!-- Popunder / Script Ad -->
-    <script type='text/javascript' src='//pl28098652.effectivegatecpm.com/d0/e8/82/d0e8822b0f745936742440ce4b8cc6fd.js'></script>
-
-    <!-- Native Ad Script -->
-    <script async="async" data-cfasync="false" src="//pl28098607.effectivegatecpm.com/82759fb4d64e44da2297eab8bf6aa1d8/invoke.js"></script>
-
-    <!-- Bottom Banner Ad (HighPerformanceFormat) -->
-    <div id="ad-banner-bottom">
-      <script type="text/javascript">
-        atOptions = {
-          'key' : 'c780314a920a2b84ec9ff1c876ddc5e7',
-          'format' : 'iframe',
-          'height' : 60,
-          'width' : 468,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/c780314a920a2b84ec9ff1c876ddc5e7/invoke.js"></script>
+    <!-- =========================================
+         ADSTERRA BANNER AD (320x50 or 468x60) 
+         ========================================= -->
+    <div id="adsterra-banner">
+      <!-- নিচে আপনার Adsterra Banner Code (iframe/script) বসান -->
+      <!-- উদাহরণ: -->
+      <div style="color: gray; font-size: 10px;">ADSTERRA BANNER SPACE</div>
+      <!-- <script type="text/javascript"> ... banner code ... </script> -->
     </div>
 
   <script type="module" src="/index.tsx"></script>
