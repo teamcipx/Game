@@ -1,3 +1,4 @@
+--- START OF FILE Game-main/App.tsx ---
 
 import React, { useState, useEffect, useRef } from 'react';
 import { GameState, GameEntity, Lane, UserProfile, Particle } from './types';
@@ -6,8 +7,12 @@ import { generateDailyChallenge, TriviaQuestion } from './services/geminiService
 import { loginUser, registerUser, logoutUser } from './services/authService';
 import { playSound } from './services/audioService';
 import { 
-  Play, Wallet, Zap, Shield, RefreshCw, Tv, X, Share2, Brain, LogOut, Magnet, User as UserIcon, Coins, ArrowRightLeft, Users, PlayCircle
+  Play, Wallet, Shield, RefreshCw, Tv, X, Share2, Brain, LogOut, Magnet, User as UserIcon, Coins, ArrowRightLeft, Users
 } from 'lucide-react';
+
+// --- Ad Config ---
+// এখানে আপনার Adsterra Direct Link বসান
+const ADSTERRA_DIRECT_LINK = "https://www.google.com"; // REPLACE WITH YOUR ACTUAL DIRECT LINK
 
 // --- Constants & Config ---
 const LANE_WIDTH = 100;
@@ -105,70 +110,7 @@ const AuthScreen = ({ onLogin }: { onLogin: () => void }) => {
   );
 };
 
-const AdOverlay = ({ 
-  onClose, 
-  type, 
-  rewardAmount 
-}: { 
-  onClose: (watched: boolean) => void, 
-  type: 'interstitial' | 'rewarded',
-  rewardAmount?: string
-}) => {
-  const [timer, setTimer] = useState(type === 'rewarded' ? 5 : 2); // Shorter timer for non-rewarded ads
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer(prev => Math.max(0, prev - 1));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-gray-800 text-white p-5 w-full max-w-sm rounded-2xl shadow-2xl relative border border-gray-700">
-        <div className="flex justify-between items-center mb-4">
-           <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-             {type === 'rewarded' ? 'Sponsored Video' : 'Advertisement'}
-           </span>
-           {timer === 0 && type !== 'rewarded' && (
-             <button onClick={() => onClose(false)} className="text-gray-400 hover:text-white"><X size={20}/></button>
-           )}
-        </div>
-        
-        <div className="h-48 bg-black mb-4 flex flex-col items-center justify-center rounded-lg relative overflow-hidden border border-gray-700">
-           <div className="absolute inset-0 bg-gradient-to-tr from-gray-800 to-gray-900"></div>
-           <PlayCircle size={48} className="z-10 mb-2 text-gray-600" />
-           <span className="font-mono z-10 font-bold text-gray-500 text-sm">Video Playing...</span>
-        </div>
-        
-        {type === 'rewarded' ? (
-           <>
-            <h3 className="text-lg font-bold mb-1 text-white">Watch to Earn Reward</h3>
-            <p className="text-sm text-gray-400 mb-4">Support us by watching this short video.</p>
-           </>
-        ) : (
-           <>
-            <h3 className="text-lg font-bold mb-1 text-white">Game Paused</h3>
-            <p className="text-sm text-gray-400 mb-4">Sponsor message</p>
-           </>
-        )}
-
-        {timer > 0 ? (
-          <button disabled className="w-full bg-gray-700 text-gray-400 py-3 rounded-lg font-mono font-bold text-sm">
-            Skip in {timer}s
-          </button>
-        ) : (
-          <button 
-            onClick={() => { playSound('UI'); onClose(true); }}
-            className={`w-full py-3 rounded-lg font-bold transition-colors ${type === 'rewarded' ? 'bg-neon-green text-black hover:bg-green-400' : 'bg-white text-black hover:bg-gray-200'}`}
-          >
-            {type === 'rewarded' ? 'CLAIM REWARD' : 'CLOSE & PLAY'}
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
+// AdOverlay Component Removed - We use Direct Link now
 
 const WalletView = ({ user, onClose }: { user: UserProfile, onClose: () => void }) => {
   const [method, setMethod] = useState<'bKash' | 'Nagad'>('bKash');
@@ -364,7 +306,6 @@ const App: React.FC = () => {
 
   // App UI State
   const [showWallet, setShowWallet] = useState(false);
-  const [showAd, setShowAd] = useState<{show: boolean, type: 'interstitial' | 'rewarded', reward?: boolean}>({show: false, type: 'interstitial'});
   const [showQuiz, setShowQuiz] = useState(false);
   const [countDown, setCountDown] = useState<number | null>(null);
   
@@ -389,7 +330,7 @@ const App: React.FC = () => {
   const frameCountRef = useRef(0);
   const scoreRef = useRef(0);
   const powerupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const gamesPlayedRef = useRef(0); // Track games to reduce ad frequency
+  const gamesPlayedRef = useRef(0);
 
   // Init Check
   useEffect(() => {
@@ -410,6 +351,37 @@ const App: React.FC = () => {
     const u = getUser();
     setUser(u);
   };
+
+  // --- Real Ad Logic ---
+  const handleWatchAd = (isRevive: boolean = false) => {
+    playSound('UI');
+    
+    if (confirm("Watch a short ad to earn reward? (Click OK to open Ad)")) {
+       // Open Adsterra Direct Link in new tab
+       const w = window.open(ADSTERRA_DIRECT_LINK, '_blank');
+       
+       // In a web game, we can't easily verify if they watched.
+       // We simulate a delay or just give reward for clicking.
+       // Better UX: Show a "Processing..." toast then reward.
+       
+       setTimeout(() => {
+           if (isRevive) {
+               playSound('WIN');
+               setGameState(prev => ({ 
+                 ...prev, 
+                 isGameOver: false, 
+                 isPlaying: true 
+               }));
+               launchGameLoop(); // Continue game
+           } else {
+               saveRunCoins(100);
+               playSound('WIN');
+               alert("Thank you! 100 Coins added.");
+               refreshUser();
+           }
+       }, 3000); // 3 seconds delay simulating check
+    }
+};
 
   // --- Game Logic ---
 
@@ -436,20 +408,33 @@ const App: React.FC = () => {
   }, [countDown]);
 
   const launchGameLoop = () => {
-    setGameState({
+    // If restarting from scratch (not revive)
+    if (gameState.isGameOver && gameState.score === 0) {
+      scoreRef.current = 0;
+      entitiesRef.current = [];
+      particlesRef.current = [];
+      playerLaneRef.current = 1; 
+      playerXRef.current = 150; 
+    } else if (!gameState.isGameOver && !gameState.isPlaying) {
+      // Fresh start
+      scoreRef.current = 0;
+      entitiesRef.current = [];
+      particlesRef.current = [];
+      playerLaneRef.current = 1; 
+      playerXRef.current = 150;
+    }
+
+    setGameState(prev => ({
+      ...prev,
       isPlaying: true,
       isGameOver: false,
       isPaused: false,
-      score: 0,
-      coinsCollected: 0,
+      // if reviving, keep score/coins, else reset
+      score: prev.isGameOver && prev.score > 0 ? prev.score : 0,
+      coinsCollected: prev.isGameOver && prev.coinsCollected > 0 ? prev.coinsCollected : 0,
       speed: BASE_SPEED,
-      activePowerups: { magnet: false, shield: false, doublePoints: false }
-    });
-    scoreRef.current = 0;
-    entitiesRef.current = [];
-    particlesRef.current = [];
-    playerLaneRef.current = 1; 
-    playerXRef.current = 150; 
+      activePowerups: prev.isGameOver ? prev.activePowerups : { magnet: false, shield: false, doublePoints: false }
+    }));
     
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     requestRef.current = requestAnimationFrame(gameLoop);
@@ -617,18 +602,8 @@ const App: React.FC = () => {
     refreshUser();
     
     gamesPlayedRef.current += 1;
+    // No Automatic popup AD, user must click button to watch
   };
-
-  useEffect(() => {
-    if (gameState.isGameOver) {
-        // Only show ad every 3rd game to be "sohonio" (tolerable)
-        if (gamesPlayedRef.current % 3 === 0) {
-           setTimeout(() => {
-                setShowAd({ show: true, type: 'interstitial' });
-           }, 1500);
-        }
-    }
-  }, [gameState.isGameOver]);
 
   // --- Rendering ---
 
@@ -950,7 +925,7 @@ const App: React.FC = () => {
              </button>
 
              <button 
-              onClick={() => { playSound('UI'); setShowAd({ show: true, type: 'rewarded', reward: true }); }}
+              onClick={() => handleWatchAd(false)}
               className="bg-gradient-to-br from-orange-500 to-orange-700 border-b-4 border-orange-900 p-4 rounded-xl flex flex-col items-center hover:brightness-110 active:border-b-0 active:translate-y-1 transition-all"
              >
                <Tv className="text-white mb-2" size={28} />
@@ -1038,18 +1013,17 @@ const App: React.FC = () => {
           </div>
 
           <button 
-            onClick={() => { playSound('UI'); setGameState(prev => ({ ...prev, isGameOver: false, isPlaying: false })); }}
+            onClick={() => { 
+                playSound('UI'); 
+                setGameState(prev => ({ ...prev, isGameOver: false, isPlaying: false, score: 0 })); 
+            }}
             className="bg-white text-black font-black py-4 px-10 rounded-full hover:scale-105 transition-transform shadow-lg flex items-center gap-2"
           >
              <RefreshCw size={24} /> TRY AGAIN
           </button>
           
           <button 
-            onClick={() => {
-              playSound('UI');
-              setShowAd({ show: true, type: 'rewarded', reward: false });
-              setGameState(prev => ({ ...prev, isGameOver: false, isPlaying: false })); 
-            }}
+            onClick={() => handleWatchAd(true)}
             className="mt-6 text-sm text-yellow-400 hover:text-yellow-300 font-bold flex items-center gap-2 underline decoration-dashed underline-offset-4"
           >
             <Tv size={16} /> WATCH AD TO REVIVE
@@ -1060,22 +1034,6 @@ const App: React.FC = () => {
       {/* Modals */}
       {showWallet && user && <WalletView user={user} onClose={() => { setShowWallet(false); refreshUser(); }} />}
       
-      {showAd.show && (
-        <AdOverlay 
-          type={showAd.type} 
-          onClose={(watched) => {
-            if (watched && showAd.reward) {
-               // 100 Coins reward
-               saveRunCoins(100);
-               playSound('WIN');
-               alert(`Reward Claimed: 100 Coins`);
-               refreshUser();
-            }
-            setShowAd({ ...showAd, show: false });
-          }} 
-        />
-      )}
-
       {showQuiz && (
         <QuizModal 
           onClose={() => setShowQuiz(false)}
