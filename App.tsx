@@ -1,4 +1,4 @@
---- START OF FILE Game-main/App.tsx ---
+
 
 import React, { useState, useEffect, useRef } from 'react';
 import { GameState, GameEntity, Lane, UserProfile, Particle } from './types';
